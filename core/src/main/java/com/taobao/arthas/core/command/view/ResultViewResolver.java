@@ -2,7 +2,7 @@ package com.taobao.arthas.core.command.view;
 
 import com.alibaba.arthas.deps.org.slf4j.Logger;
 import com.alibaba.arthas.deps.org.slf4j.LoggerFactory;
-import com.taobao.arthas.core.command.model.*;
+import com.taobao.arthas.core.command.model.ResultModel;
 import com.taobao.arthas.core.shell.command.CommandProcess;
 
 import java.lang.reflect.Method;
@@ -20,23 +20,18 @@ public class ResultViewResolver {
     // modelClass -> view
     private Map<Class, ResultView> resultViewMap = new ConcurrentHashMap<Class, ResultView>();
 
-    private static ResultViewResolver viewResolver;
-
-    public static ResultViewResolver getInstance() {
-        if (viewResolver == null) {
-            synchronized (ResultViewResolver.class) {
-                viewResolver = new ResultViewResolver();
-            }
-        }
-        return viewResolver;
+    public ResultViewResolver() {
+        initResultViews();
     }
 
-    static {
-        getInstance().registerResultViews();
-    }
-
-    private void registerResultViews() {
+    /**
+     * 需要调用此方法初始化注册ResultView
+     */
+    private void initResultViews() {
         try {
+            registerView(RowAffectView.class);
+
+            //basic1000
             registerView(StatusView.class);
             registerView(VersionView.class);
             registerView(MessageView.class);
@@ -44,29 +39,64 @@ public class ResultViewResolver {
             //registerView(HistoryView.class);
             registerView(EchoView.class);
             registerView(CatView.class);
+            registerView(OptionsView.class);
+            registerView(SystemPropertyView.class);
+            registerView(SystemEnvView.class);
+            registerView(PwdView.class);
+            registerView(VMOptionView.class);
+            registerView(SessionView.class);
+            registerView(ResetView.class);
+            registerView(ShutdownView.class);
+
+            //klass100
+            registerView(ClassLoaderView.class);
+            registerView(DumpClassView.class);
+            registerView(GetStaticView.class);
+            registerView(JadView.class);
+            registerView(MemoryCompilerView.class);
+            registerView(OgnlView.class);
+            registerView(RedefineView.class);
+            registerView(SearchClassView.class);
+            registerView(SearchMethodView.class);
+
+            //logger
+            registerView(LoggerView.class);
+
+            //monitor2000
+            registerView(DashboardView.class);
+            registerView(JvmView.class);
+            registerView(MBeanView.class);
+            registerView(PerfCounterView.class);
+            registerView(ThreadView.class);
+            registerView(ProfilerView.class);
+            registerView(EnhancerView.class);
+            registerView(MonitorView.class);
+            registerView(StackView.class);
+            registerView(TimeTunnelView.class);
+            registerView(TraceView.class);
+            registerView(WatchView.class);
+
         } catch (Throwable e) {
             logger.error("register result view failed", e);
         }
-    }
-
-    private ResultViewResolver() {
     }
 
     public ResultView getResultView(ResultModel model) {
         return resultViewMap.get(model.getClass());
     }
 
-    public void registerView(Class modelClass, ResultView view) {
-        //TODO 检查model的type是否重复，减少复制代码带来的bug
+    public ResultViewResolver registerView(Class modelClass, ResultView view) {
+        //TODO 检查model的type是否重复，避免复制代码带来的bug
         this.resultViewMap.put(modelClass, view);
+        return this;
     }
 
-    public void registerView(ResultView view) {
+    public ResultViewResolver registerView(ResultView view) {
         Class modelClass = getModelClass(view);
         if (modelClass == null) {
             throw new NullPointerException("model class is null");
         }
-        this.registerView(modelClass, view);
+        return this.registerView(modelClass, view);
     }
 
     public void registerView(Class<? extends ResultView> viewClass) {

@@ -11,11 +11,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.zeroturnaround.zip.ZipUtil;
 
-import com.alibaba.arthas.deps.org.objectweb.asm.Type;
-import com.alibaba.arthas.deps.org.objectweb.asm.tree.ClassNode;
-import com.alibaba.arthas.deps.org.objectweb.asm.tree.MethodNode;
-import com.taobao.arthas.bytekit.utils.AsmUtils;
-import com.taobao.arthas.bytekit.utils.Decompiler;
+import com.alibaba.deps.org.objectweb.asm.Type;
+import com.alibaba.deps.org.objectweb.asm.tree.ClassNode;
+import com.alibaba.deps.org.objectweb.asm.tree.MethodNode;
+import com.alibaba.bytekit.utils.AsmUtils;
+import com.alibaba.bytekit.utils.Decompiler;
 import com.taobao.arthas.core.bytecode.TestHelper;
 import com.taobao.arthas.core.server.ArthasBootstrap;
 import com.taobao.arthas.core.util.affect.EnhancerAffect;
@@ -37,7 +37,7 @@ public class EnhancerTest {
 
         TestHelper.appendSpyJar(instrumentation);
 
-        ArthasBootstrap.getInstance(instrumentation, "");
+        ArthasBootstrap.getInstance(instrumentation, "ip=127.0.0.1");
 
         AdviceListener listener = Mockito.mock(AdviceListener.class);
 

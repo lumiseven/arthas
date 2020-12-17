@@ -335,7 +335,7 @@ public class ProcessImpl implements Process {
 
         process = new CommandProcessImpl(this, tty);
         if (resultDistributor == null) {
-            resultDistributor = new TermResultDistributorImpl(process);
+            resultDistributor = new TermResultDistributorImpl(process, ArthasBootstrap.getInstance().getResultViewResolver());
         }
 
         final List<String> args2 = new LinkedList<String>();
@@ -546,14 +546,15 @@ public class ProcessImpl implements Process {
         }
 
         @Override
-        public void register(AdviceListener listener, ClassFileTransformer transformer) {
-            if (listener instanceof ProcessAware) {
-                ProcessAware processAware = (ProcessAware) listener;
+        public void register(AdviceListener adviceListener, ClassFileTransformer transformer) {
+            if (adviceListener instanceof ProcessAware) {
+                ProcessAware processAware = (ProcessAware) adviceListener;
                 // listener 有可能是其它 command 创建的
                 if(processAware.getProcess() == null) {
                     processAware.setProcess(this.process);
                 }
             }
+            this.listener = adviceListener;
             AdviceWeaver.reg(listener);
             
             this.transformer = transformer;

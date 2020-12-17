@@ -16,6 +16,8 @@ public class ArthasProperties {
 	private String tunnelServer;
 	private String agentId;
 
+	private String appName;
+
 	/**
 	 * report executed command
 	 */
@@ -33,11 +35,6 @@ public class ArthasProperties {
 	 */
 	private boolean slientInit = false;
 
-	/**
-	 * arthas agent init in a background thread by default.
-	 */
-	private boolean syncInit = false;
-
 	public String getHome() {
 		return home;
 	}
@@ -52,14 +49,6 @@ public class ArthasProperties {
 
 	public void setSlientInit(boolean slientInit) {
 		this.slientInit = slientInit;
-	}
-
-	public boolean isSyncInit() {
-		return syncInit;
-	}
-
-	public void setSyncInit(boolean syncInit) {
-		this.syncInit = syncInit;
 	}
 
 	public String getIp() {
@@ -117,5 +106,13 @@ public class ArthasProperties {
 	public void setSessionTimeout(long sessionTimeout) {
 		this.sessionTimeout = sessionTimeout;
 	}
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
 
 }
